@@ -166,53 +166,51 @@ def search(
         bs4.BeautifulSoup: Search result's soup
     """
 
-    query = utils.Query()
-    query.add_field(f"work_search[query]={any_field if any_field != '' else ' '}")
+    query = {}
+    query["work_search[query]"] = any_field if any_field != '' else ' '
     if page != 1:
-        query.add_field(f"page={page}")
+        query["page"] = page
     if title != "":
-        query.add_field(f"work_search[title]={title}")
+        query["work_search[title]"] = title
     if author != "":
-        query.add_field(f"work_search[creators]={author}")
+        query["work_search[creators]"] = author
     if single_chapter:
-        query.add_field(f"work_search[single_chapter]=1")
+        query["work_search[single_chapter]=1"]
     if word_count is not None:
-        query.add_field(f"work_search[word_count]={word_count}")
+        query["work_search[word_count]"] = word_count
     if language != "":
-        query.add_field(f"work_search[language_id]={language}")
+        query["work_search[language_id]"] = language
     if fandoms != "":
-        query.add_field(f"work_search[fandom_names]={fandoms}")
+        query["work_search[fandom_names]"] = fandoms
     if characters != "":
-        query.add_field(f"work_search[character_names]={characters}")
+        query["work_search[character_names]"] = characters
     if relationships != "":
-        query.add_field(f"work_search[relationship_names]={relationships}")
+        query["work_search[relationship_names]"] = relationships
     if tags != "":
-        query.add_field(f"work_search[freeform_names]={tags}")
+        query["work_search[freeform_names]"] = tags
     if rating is not None:
-        query.add_field(f"work_search[rating_ids]={rating}")
+        query["work_search[rating_ids]"] = rating
     if hits is not None:
-        query.add_field(f"work_search[hits]={hits}")
+        query["work_search[hits]"] = hits
     if kudos is not None:
-        query.add_field(f"work_search[kudos_count]={kudos}")
-    if crossovers is not None:
-        query.add_field(f"work_search[crossover]={'T' if crossovers else 'F'}")
+        query["work_search[kudos_count]"] = kudos
     if bookmarks is not None:
-        query.add_field(f"work_search[bookmarks_count]={bookmarks}")
+        query["work_search[bookmarks_count]"] = bookmarks
     if comments is not None:
-        query.add_field(f"work_search[comments_count]={comments}")
+        query["work_search[comments_count]"] = comments
     if completion_status is not None:
-        query.add_field(f"work_search[complete]={'T' if completion_status else 'F'}")
+        query["work_search[complete]"] = 'T' if completion_status else 'F'
     if sort_column != "":
-        query.add_field(f"work_search[sort_column]={sort_column}")
+        query["work_search[sort_column]"] = sort_column
     if sort_direction != "":
-        query.add_field(f"work_search[sort_direction]={sort_direction}")
+        query["work_search[sort_direction]"] = sort_direction
     if revised_at != "":
-        query.add_field(f"work_search[revised_at]={revised_at}")
+        query["work_search[revised_at]"] = revised_at
 
-    url = f"https://archiveofourown.org/works/search?{query.string}"
+    url = f"https://archiveofourown.org/works/search"
 
     if session is None:
-        req = requester.request("get", url)
+        req = requester.request("get", url, params=query)
     else:
         req = session.get(url)
     if req.status_code == 429:
