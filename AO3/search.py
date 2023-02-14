@@ -212,7 +212,7 @@ def search(
     if session is None:
         req = requester.request("get", url, params=query)
     else:
-        req = session.get(url)
+        req = session.get(url, params=query)
     if req.status_code == 429:
         raise utils.HTTPError("We are being rate-limited. Try again in a while or reduce the number of requests")
     soup = BeautifulSoup(req.content, features="lxml")
